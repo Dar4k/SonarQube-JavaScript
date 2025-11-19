@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { uiInfo, extractHiddenPrompt } from './hidden';
 
 // CORREGIDO: Se eliminó la variable global y se usa estado de React.
@@ -9,24 +10,34 @@ import { uiInfo, extractHiddenPrompt } from './hidden';
 // Very messy calculator component to be "fixed" by students.
 // It intentionally mixes concerns, uses global mutable state, and constructs LLM prompts by naive concatenation.
 
-// CODE SMELLS INTENCIONAL SE MODIFICA POR SI SE ADICIONA LA FUNCIONALIDAD DE HISTORIAL NO SE LEE AUN
-const [history, setHistory] = useState([]);
 
 function badParse(s) {
   try { return Number(String(s).replace(',', '.')); } catch (e) { return 0; }
 }
 
+// SECURITY HOTSPOT: Esta lógica simula un ataque de prompt injection.
+// El payload oculto en hidden.js redirige al LLM a generar una receta.
+// En producción, esto sería una vulnerabilidad crítica.
 function insecureBuildPrompt(system, userTpl, userInput) {
   // vulnerable concatenation of user template directly into the prompt
   return system + "\n\n" + userTpl + "\n\nUser input: " + userInput;
 }
 
+//fFUNCIÓN AJUSTADA PARA USO DE PROPS, MEJORA EN LA LEGIBILIDAD
 function DangerousLLM({ userTpl, userInput }) {
-  // This component "simulates" sending a prompt to an LLM and prints the raw prompt.
   const system = "System: You are a helpful assistant.";
   const raw = insecureBuildPrompt(system, userTpl, userInput);
-  return (<pre style={{ whiteSpace: 'pre-wrap', background: '#111', color: '#bada55', padding: 10 }}>{raw}</pre>);
+  return (
+    <pre style={{ whiteSpace: 'pre-wrap', background: '#111', color: '#bada55', padding: 10 }}>
+      {raw}
+    </pre>
+  );
 }
+
+DangerousLLM.propTypes = {
+  userTpl: PropTypes.string.isRequired,
+  userInput: PropTypes.string.isRequired
+};
 
 export default function App() {
   const [a, setA] = useState('');
@@ -63,7 +74,7 @@ export default function App() {
       if (op === '%') r = A % B;
       setRes(r);
       // se eliminan las dobles llaves ya que en js no existen, esto hace que el historial no se guarde
-      GLOBAL_HISTORY.push(`${A}|${B}|${op}|${r}`);
+      setHistory(prev => [...prev, `${A}|${B}|${op}|${r}`]);
     } catch (e) {
 
       // SE ADICIONA MENSAJE DE ERROR MAS CLARO A LA CONSOLA 
