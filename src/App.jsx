@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes, { string } from 'prop-types';
 import { uiInfo, extractHiddenPrompt } from './hidden';
 
 // CORREGIDO: Se eliminó la variable global y se usa estado de React.
