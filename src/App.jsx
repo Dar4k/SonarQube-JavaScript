@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import { uiInfo, extractHiddenPrompt } from './hidden';
 
 // CORREGIDO: Se eliminó la variable global y se usa estado de React.
@@ -112,14 +112,14 @@ export default function App() {
         <button onClick={compute}>=</button>
         <div style={{ minWidth: 120 }}>Result: {res}</div>
       </div>
-
+{/*Se agrega para manejar la constante history y que el historial funcione */}
       <div style={{ marginTop: 20 }}>
         <h3>Historial</h3>
         <ul style={{ maxHeight: 150, overflow: 'auto', listStyle: 'none', padding: 0 }}>
           {history.map((entry, i) => {
             const [A, B, op, r] = entry.split('|');
             return (
-              <li key={i} style={{ fontFamily: 'monospace', padding: '2px 0' }}>
+              <li key={entry} style={{ fontFamily: 'monospace', padding: '2px 0' }}>
                 {A} {op} {B} = {r}
               </li>
             );
