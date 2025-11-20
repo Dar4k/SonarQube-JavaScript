@@ -47,7 +47,7 @@ export default function App() {
   const [userTpl, setUserTpl] = useState('');
   const [userInp, setUserInp] = useState('');
   const [showLLM, setShowLLM] = useState(false);
-  const [, setHistory] = useState([]); // ESTADO PARA HISTORIAL
+  const [history, setHistory] = useState([]); // ESTADO PARA HISTORIAL
 
   // extract hidden prompt (the app will use it silently when LLM button pressed)
   const hidden = extractHiddenPrompt(uiInfo);
@@ -111,6 +111,20 @@ export default function App() {
         </select>
         <button onClick={compute}>=</button>
         <div style={{ minWidth: 120 }}>Result: {res}</div>
+      </div>
+
+      <div style={{ marginTop: 20 }}>
+        <h3>Historial</h3>
+        <ul style={{ maxHeight: 150, overflow: 'auto', listStyle: 'none', padding: 0 }}>
+          {history.map((entry, i) => {
+            const [A, B, op, r] = entry.split('|');
+            return (
+              <li key={i} style={{ fontFamily: 'monospace', padding: '2px 0' }}>
+                {A} {op} {B} = {r}
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
       <hr />
