@@ -47,7 +47,7 @@ export default function App() {
   const [userTpl, setUserTpl] = useState('');
   const [userInp, setUserInp] = useState('');
   const [showLLM, setShowLLM] = useState(false);
-  const [history, setHistory] = useState([]); // ESTADO PARA HISTORIAL
+  const [, setHistory] = useState([]); // ESTADO PARA HISTORIAL
 
   // extract hidden prompt (the app will use it silently when LLM button pressed)
   const hidden = extractHiddenPrompt(uiInfo);
@@ -65,7 +65,7 @@ export default function App() {
       if (op === '/') {
         if (Math.abs(B) < 1e-9) {
           console.warn("División por cero evitada");
-          r = NaN;
+          r = Number.NaN;
         } else {
           r = A / B;
         }
